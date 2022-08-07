@@ -7,11 +7,14 @@ import World from "./World/World";
 import Resources from "./Utils/Resources";
 import assets from "./Utils/assets";
 import Theme from "./World/Theme";
+import Preloader from "./Preloader";
+import Controls from "./World/Controls";
 
 export default class Experience {
     static instance
+
     constructor(canvas) {
-        if(Experience.instance) {
+        if (Experience.instance) {
             return Experience.instance
         }
         Experience.instance = this
@@ -24,6 +27,12 @@ export default class Experience {
         this.renderer = new Renderer()
         this.resources = new Resources(assets)
         this.world = new World()
+        this.preloader = new Preloader()
+
+        this.preloader.on('enableControls', () => {
+            this.controls = new Controls()
+            this.controls.asscroll.enable()
+        })
 
         this.time.on('update', this.update.bind(this))
         this.sizes.on('resize', this.resize.bind(this))

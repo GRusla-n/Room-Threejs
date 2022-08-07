@@ -7,12 +7,25 @@ import ASScroll from '@ashthornton/asscroll'
 const isTouch = ('ontouchstart' in document.documentElement)
 
 export default class Controls {
+    static instance
+
     constructor() {
+        if (Controls.instance) {
+            return Controls.instance
+        }
+        Controls.instance = this
+
         this.expirience = new Experience()
         this.scene = this.expirience.scene
         this.room = this.expirience.world.room.roomScene
         this.sizes = this.expirience.sizes
         this.camera = this.expirience.camera
+        this.floor = this.expirience.world.floor
+
+        this.cicleOne = this.floor.circleOne
+        this.cicleTwo = this.floor.circleTwo
+        this.cicleThree = this.floor.circleThree
+
         GSAP.registerPlugin(ScrollTrigger)
 
         this.setSmoothScroll();
@@ -33,8 +46,10 @@ export default class Controls {
     setSmoothScroll() {
         const asscroll = new ASScroll({
             disableRaf: true,
-            ease: 0.3,
+            ease: 0.1,
         });
+
+        this.asscroll = asscroll
 
 
         GSAP.ticker.add(asscroll.update);
@@ -57,7 +72,7 @@ export default class Controls {
         asscroll.on("update", ScrollTrigger.update);
         ScrollTrigger.addEventListener("refresh", asscroll.resize);
 
-        asscroll.enable();
+        // this.asscroll.enable()
     }
 
     setScrollTrigger() {
@@ -162,6 +177,54 @@ export default class Controls {
                         this.sections.forEach(section => {
                             this.progressWrapper = section.querySelector('.progress-wrapper')
                             this.progressBar = section.querySelector('.progress-wrapper')
+
+                            // Start circle animation ------------------------------------------------------------------
+
+                            this.firstMoveTimeline = new GSAP.timeline({
+                                scrollTrigger: {
+                                    trigger: '.first-move',
+                                    start: 'top top',
+                                    end: 'bottom bottom',
+                                    scrub: 0.6,
+                                    invalidateOnRefresh: true,
+                                }
+                            }).to(this.cicleOne.scale, {
+                                x: 3,
+                                y: 3,
+                                z: 3,
+                            },)
+
+                            this.secondMoveTimeline = new GSAP.timeline({
+                                scrollTrigger: {
+                                    trigger: '.second-move',
+                                    start: 'top top',
+                                    end: 'bottom bottom',
+                                    scrub: 0.6,
+                                    invalidateOnRefresh: true,
+                                }
+                            }).to(this.cicleTwo.scale, {
+                                x: 3,
+                                y: 3,
+                                z: 3,
+                            }, 'same').to(this.room.position, {
+                                y: 0.7
+                            }, 'same')
+
+                            this.thirdMoveTimeline = new GSAP.timeline({
+                                scrollTrigger: {
+                                    trigger: '.third-move',
+                                    start: 'top top',
+                                    end: 'bottom bottom',
+                                    scrub: 0.6,
+                                    invalidateOnRefresh: true,
+                                }
+                            }).to(this.cicleThree.scale, {
+                                x: 3,
+                                y: 3,
+                                z: 3,
+                            })
+
+                            // End circle animation ------------------------------------------------------------------
 
                             if (section.classList.contains('right')) {
                                 GSAP.to(section, {

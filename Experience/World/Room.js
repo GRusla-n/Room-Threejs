@@ -10,6 +10,7 @@ export default class Room {
         this.resources = this.expirience.resources
         this.room = this.resources.items.room
         this.roomScene = this.room.scene
+        this.roomChildren = {}
         this.lerp = {
             current: 0,
             target: 0,
@@ -47,6 +48,15 @@ export default class Room {
                     map: this.resources.items.screen.screen,
                 })
             }
+
+            child.scale.set(0, 0, 0)
+            if (child.name === 'Cube') {
+                // child.scale.set(1, 1, 1)
+                child.position.set(0, 0.5, 0)
+                child.rotation.y = Math.PI / 4;
+            }
+
+            this.roomChildren[child.name.toLowerCase()] = child;
         })
         this.scene.add(this.roomScene)
     }
@@ -65,7 +75,8 @@ export default class Room {
         this.mixer = new THREE.AnimationMixer(this.roomScene)
     }
 
-    resize() {}
+    resize() {
+    }
 
     update() {
         this.lerp.current = GSAP.utils.interpolate(

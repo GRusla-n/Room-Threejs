@@ -8,15 +8,18 @@ export default class Environment {
         this.expirience = new Experience()
         this.scene = this.expirience.scene
         this.resources = this.expirience.resources
-
-        this.gui = new GUI()
         this.obj = {
             color: {r: 0, g: 0, b: 0},
             intensity: 3
         }
 
         this.setSunlight()
-        this.setGUI()
+
+
+        if (window.location.pathname.includes('settings')) {
+            this.gui = new GUI()
+            this.setGUI()
+        }
     }
 
     setGUI() {
@@ -47,8 +50,16 @@ export default class Environment {
 
     switchTheme(theme) {
         if (theme === 'dark') {
-            GSAP.to(this.sunlight.color, {r: 0.09803921568627451, g: 0.11372549019607843, b: 0.3411764705882353}).duration(0.5)
-            GSAP.to(this.ambientLight.color, {r: 0.09803921568627451, g: 0.11372549019607843, b: 0.3411764705882353}).duration(0.5)
+            GSAP.to(this.sunlight.color, {
+                r: 0.09803921568627451,
+                g: 0.11372549019607843,
+                b: 0.3411764705882353
+            }).duration(0.5)
+            GSAP.to(this.ambientLight.color, {
+                r: 0.09803921568627451,
+                g: 0.11372549019607843,
+                b: 0.3411764705882353
+            }).duration(0.5)
             GSAP.to(this.sunlight.intensity, 0.8).duration(0.5)
             GSAP.to(this.ambientLight.intensity, 0.8).duration(0.5)
         } else {
